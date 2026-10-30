@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# k6 metrics are pushed through remote write (/api/v1/write),
+# so only Prometheus itself is scraped here.
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

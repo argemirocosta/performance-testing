@@ -1,0 +1,48 @@
+name: k6-performance-testing
+
+services:
+  serverest:
+    image: paulogoncalvesbh/serverest:3.2.2
+    container_name: serverest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.15.1
+    container_name: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      # Allows k6 to push metrics via the experimental-prometheus-rw output
+      - --web.enable-remote-write-receiver
+      # Allows k6 trends to be stored as native histograms (precise percentiles)
+      - --enable-feature=native-histograms
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:13.2.5
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      # Local use only: allows viewing dashboards without logging in
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+  grafana-data:
