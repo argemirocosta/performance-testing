@@ -46,6 +46,24 @@ services:
       - prometheus
     restart: unless-stopped
 
+  # On-demand service (not started by `docker compose up`):
+  #   docker compose run --rm k6 run smoke.ts
+  k6:
+    image: grafana/k6:2.3.0
+    container_name: k6
+    profiles: ["k6"]
+    working_dir: /scripts
+    environment:
+      - BASE_URL=http://serverest:3000
+      - K6_OUT=experimental-prometheus-rw
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+    volumes:
+      - ./tests:/scripts:ro
+    depends_on:
+      - serverest
+      - prometheus
+
 volumes:
   prometheus-data:
   grafana-data:
