@@ -1,0 +1,23 @@
+{
+  "name": "k6-performance-testing",
+  "version": "1.0.0",
+  "description": "Performance tests with k6 and TypeScript against the ServeRest API, with metrics in Prometheus and dashboards in Grafana",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "k6",
+    "performance-testing",
+    "load-testing",
+    "typescript",
+    "prometheus",
+    "grafana"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/k6": "^2.3.1",
+    "typescript": "^7.0.2"
+  }
+}

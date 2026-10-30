@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Test results and reports
+results/
+reports/
+*.html
+summary*.json
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
