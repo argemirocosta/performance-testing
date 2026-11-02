@@ -19,8 +19,12 @@ export interface CartItem {
   quantidade: number;
 }
 
-function randomInt(min: number, max: number): number {
+export function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function randomItem<T>(items: T[]): T {
+  return items[randomInt(0, items.length - 1)];
 }
 
 // ServeRest requires unique e-mails and product names, so every generated
@@ -34,7 +38,8 @@ export function buildUser(admin = false): UserPayload {
   const suffix = uniqueSuffix();
   return {
     nome: `k6 User ${suffix}`,
-    email: `k6.user.${suffix}@perf.test`,
+    // example.com is reserved for testing; ServeRest rejects TLDs like .test
+    email: `k6.user.${suffix}@example.com`,
     password: 'k6@perf',
     administrador: admin ? 'true' : 'false',
   };
@@ -46,6 +51,7 @@ export function buildProduct(): ProductPayload {
     nome: `k6 Product ${suffix}`,
     preco: randomInt(10, 5000),
     descricao: 'Product created by k6 performance tests',
-    quantidade: randomInt(100, 1000),
+    // Every purchase decreases the stock, so it must last for long tests (soak)
+    quantidade: 1_000_000,
   };
 }
