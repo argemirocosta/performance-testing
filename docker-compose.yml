@@ -17,8 +17,6 @@ services:
       - --storage.tsdb.retention.time=15d
       # Allows k6 to push metrics via the experimental-prometheus-rw output
       - --web.enable-remote-write-receiver
-      # Allows k6 trends to be stored as native histograms (precise percentiles)
-      - --enable-feature=native-histograms
     ports:
       - "9090:9090"
     volumes:
@@ -57,7 +55,7 @@ services:
       - BASE_URL=http://serverest:3000
       - K6_OUT=experimental-prometheus-rw
       - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
-      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+      - K6_FEATURES=native-histograms
     volumes:
       - ./tests:/scripts:ro
     depends_on:
