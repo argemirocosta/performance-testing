@@ -5,6 +5,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "test:smoke": "sh scripts/run-test.sh smoke",
+    "test:load": "sh scripts/run-test.sh load",
+    "test:stress": "sh scripts/run-test.sh stress",
+    "test:spike": "sh scripts/run-test.sh spike",
+    "test:soak": "sh scripts/run-test.sh soak",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [

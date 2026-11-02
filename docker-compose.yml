@@ -56,8 +56,14 @@ services:
       - K6_OUT=experimental-prometheus-rw
       - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
       - K6_FEATURES=native-histograms
+      # Optional test settings, passed through from the host when set
+      - VUS
+      - DURATION
+      - STEP_DURATION
+      - SPIKE_VUS
     volumes:
       - ./tests:/scripts:ro
+      - ./reports:/reports
     depends_on:
       - serverest
       - prometheus
