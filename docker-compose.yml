@@ -1,4 +1,4 @@
-name: k6-performance-testing
+name: performance-testing
 
 services:
   serverest:
@@ -19,6 +19,9 @@ services:
       - --web.enable-remote-write-receiver
     ports:
       - "9090:9090"
+    extra_hosts:
+      # Allows scraping a JMeter running on the host machine (also on Linux)
+      - host.docker.internal:host-gateway
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
@@ -33,7 +36,7 @@ services:
       # Local use only: allows viewing dashboards without logging in
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
-      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/k6-prometheus-native-histograms.json
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/k6/k6-prometheus-native-histograms.json
     ports:
       - "3001:3000"
     volumes:
@@ -62,7 +65,22 @@ services:
       - STEP_DURATION
       - SPIKE_VUS
     volumes:
-      - ./tests:/scripts:ro
+      - ./k6:/scripts:ro
+      - ./reports:/reports
+    depends_on:
+      - serverest
+      - prometheus
+
+  # On-demand service (not started by `docker compose up`):
+  #   docker compose run --rm jmeter -n -t serverest.jmx -q user.properties -Jhost=serverest
+  jmeter:
+    build: ./jmeter
+    image: performance-testing-jmeter:5.6.3
+    container_name: jmeter
+    profiles: ["jmeter"]
+    working_dir: /tests
+    volumes:
+      - ./jmeter:/tests:ro
       - ./reports:/reports
     depends_on:
       - serverest

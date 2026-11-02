@@ -10,5 +10,5 @@
     "skipLibCheck": true,
     "types": ["k6"]
   },
-  "include": ["tests/**/*.ts"]
+  "include": ["k6/**/*.ts"]
 }

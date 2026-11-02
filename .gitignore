@@ -22,3 +22,8 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# JMeter results
+*.jtl
+jmeter.log
+*.swp
